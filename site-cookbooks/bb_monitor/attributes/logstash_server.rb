@@ -27,9 +27,11 @@ normal[:logstash][:server][:inputs] = [
 
 normal[:logstash][:server][:outputs] = [
   {
-    "elasticsearch_http"=> {
+    "elasticsearch"=> {
       "host"=> node[:bb_monitor][:logstash][:server][:elasticsearch_server],
-      "replication"=> "async"
+      "protocol" => "node"
+      "cluster" => "logstash"
+      "port" => "9300"
     },
     "statsd"=> node[:bb_monitor][:logstash][:server][:statsd_output],
   }
