@@ -1,8 +1,8 @@
 {
-  "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "",
-  "Parameters": {
-	"InstanceKeyName" : {
+	"AWSTemplateFormatVersion": "2010-09-09",
+	"Description": "",
+	"Parameters": {
+		"InstanceKeyName" : {
 			"Description" : "Name of an existing EC2 KeyPair to enable SSH access to the instances",
 			"Type" : "String",
 			"MinLength": "1",
@@ -11,230 +11,229 @@
 			"ConstraintDescription" : "can contain only alphanumeric characters, spaces, dashes and underscores."
 		},
 
-	"VpcIdentifier" : {
-		  "Type" : "String",
-		  "Description" : "VpcId of your existing Virtual Private Cloud (VPC)"
+		"CookbooksRepo": {
+			"Description": "The github url for your custom cookbooks",
+			"Type": "String"
 		},
-
-		"CidrOctet2" : {
-			"Description" : "The second octet of the VPC's 10.xxx.0.0 base CIDR block.",
-			"Type" : "Number",
-			"MinValue": "0",
-			"MaxValue": "254",
-			"ConstraintDescription" : "Can contain only numbers between 0 and 254."
+		"CookbooksRef": {
+			"Description": "The git reference to checkout for custom cookbooks",
+			"Type": "String",
+			"Default": "master"
 		},
-
-		"CidrOctet3" : {
-			"Description" : "The third octet of the VPC's 10.0.xxx.0 base CIDR block.",
-			"Type" : "Number",
-			"MinValue": "0",
-			"MaxValue": "254",
-			"ConstraintDescription" : "Can contain only numbers between 0 and 254."
+		"CookbooksSshKey": {
+			"Description": "The ssh key needed to clone the cookbooks repo",
+			"Type": "String",
+			"NoEcho": "true",
+			"Default": ""
 		},
-
-		"VpcRouteTableIdPublic" : {
-		  "Type" : "String",
-		  "Description" : "ID of the public route table in your VPC that will use the NAT instance as default path to 0.0.0.0/0"
+		"Version": {
+			"Description": "Just a place holder for version",
+			"Type": "String",
+			"Default": "0.1"
 		},
-
-		"VpcRouteTableIdPrivate" : {
-		  "Type" : "String",
-		  "Description" : "ID of the private route table in your VPC that will use the NAT instance as default path to 0.0.0.0/0"
+		"RabbitMQCertificateARN": {
+			"Description": "ARN of the certificate to use for rabbitmq",
+			"Type": "String"
 		},
-
-		"VpcSecurityGroupOutboundAccess" : {
-			"Description" : "Security group allowing outbound access to the internet",
-			"Type" : "String",
-			"MinLength": "1",
-			"MaxLength": "200"
+		"GithubOauthAppId": {
+			"Description": "Github Oauth App Id to use for doorman authentication. Leave empty for none.",
+			"Type": "String",
+			"Default": ""
 		},
-
-		"VpcSecurityGroupBastionAccess" : {
-			"Description" : "Security group allowing access from the bastion host",
-			"Type" : "String",
-			"MinLength": "1",
-			"MaxLength": "200"
+		"GithubOauthSecret": {
+			"Description": "Github Oauth App Secret to use for doorman authentication. Leave empty for none.",
+			"Type": "String",
+			"NoEcho": "true",
+			"Default": ""
 		},
-
-		"VpcSecurityGroupEmployeeAccess" : {
-			"Description" : "Security group for highly privileged users",
-			"Type" : "String",
-			"MinLength": "1",
-			"MaxLength": "200"
+		"GithubOauthOrganization": {
+			"Description": "Github Organization to allow through doorman",
+			"Type": "String",
+			"Default": ""
 		},
-
-    "CookbooksRepo": {
-      "Description": "The github url for your custom cookbooks",
-      "Type": "String"
+		"DoormanEnable": {
+			"Description": "Protect all internal resources through Doorman? If you are not deploying this privately through a VPN, this is recommended",
+			"Type": "String",
+			"Default": "true",
+			"AllowedValues": [ "true", "false" ]
+		},
+		"DoormanSessionSecret": {
+			"Description": "A Secret Salt used to encrypt cookies for doorman",
+			"Type": "String",
+			"NoEcho": "true",
+			"Default": ""
+		},
+		"DoormanPassword": {
+			"Description": "Password to use for alternate authentication through doorman. Leave empty for none",
+			"Type": "String",
+			"Default": ""
+		},
+		"OpsWorksStackColor": {
+			"Description": "RGB Color to use for OpsWorks Stack",
+			"Type": "String",
+			"Default": "rgb(45, 114, 184)"
+		},
+		"BastionInstanceType": {
+			"Type": "String",
+			"Default": "m3.medium",
+			"AllowedValues": [ "m3.medium" ],
+			"Description": "Default is m3.medium."
+		},
+		"RabbitMQInstanceType": {
+			"Type": "String",
+			"Default": "r3.large",
+			"AllowedValues": [ "m3.large", "c3.large", "r3.large" ],
+			"Description": "Enter m3.large, c3.large, or r3.large. Default is r3.large."
+		},
+		"GraphiteInstanceType": {
+			"Type": "String",
+			"Default": "c3.large",
+			"AllowedValues": [ "m3.medium", "m3.large", "c3.large", "r3.large" ],
+			"Description": "Enter m3.medium, m3.large, c3.large, or r3.large. Default is c3.large."
+		},
+		"ElasticSearchInstanceType": {
+			"Type": "String",
+			"Default": "r3.large",
+			"AllowedValues": [ "m3.medium", "m3.large", "c3.large", "r3.large" ],
+			"Description": "Enter m3.medium, m3.large, c3.large, or r3.large. Default is r3.large."
+		},
+		"LogstashInstanceType": {
+			"Type": "String",
+			"Default": "c3.large",
+			"AllowedValues": [ "m3.medium", "m3.large", "c3.large", "r3.large" ],
+			"Description": "Enter m3.medium, m3.large, c3.large, or r3.large. Default is c3.large."
+		},
+		"DashboardInstanceType": {
+			"Type": "String",
+			"Default": "c3.large",
+			"AllowedValues": [ "m3.medium", "m3.large", "c3.large", "r3.large", "m3.2xlarge" ],
+			"Description": "Enter m3.medium, m3.large, c3.large, or r3.large. Default is c3.large."
+		},
+		"RabbitMQUser": {
+			"Description": "RabbitMQ User",
+			"Type": "String",
+			"Default": "logger"
+		},
+		"RabbitMQErlangCookie": {
+			"Description": "RabbitMQ Erlang Cookie. This should be unique per stack",
+			"Type": "String",
+			"NoEcho": "true"
+		},
+		"RabbitMQPassword": {
+			"Description": "RabbitMQ Password",
+			"Type": "String",
+			"Default": "hunter2"
+		},
+		"RabbitMQLogstashInternalUser": {
+			"Description": "RabbitMQ User",
+			"Type": "String",
+			"Default": "logstash_internal"
+		},
+		"RabbitMQLogstashInternalPassword": {
+			"Description": "RabbitMQ Password",
+			"Type": "String"
+		},
+		"RabbitMQLogstashExternalUser": {
+			"Description": "RabbitMQ User",
+			"Type": "String",
+			"Default": "logstash_external"
+		},
+		"RabbitMQLogstashExternalPassword": {
+			"Description": "RabbitMQ Password",
+			"Type": "String"
+		},
+		"RabbitMQSensuPassword": {
+			"Description": "RabbitMQ Sensu Password",
+			"Type": "String"
+		},
+		"RabbitMQStatsdPassword": {
+			"Description": "RabbitMQ Statsd Password",
+			"Type": "String"
+		},
+		"GraphiteVolumeSize": {
+			"Description": "Size of disk in GB to use for graphite ebs volumes",
+			"Type": "Number",
+			"MinValue": 20,
+			"Default": 100
+		},
+		"ElasticSearchVolumeSize": {
+			"Description": "Size of disk in GB to use for elasticsearch ebs volumes",
+			"Type": "Number",
+			"MinValue": 20,
+			"Default": 1000
+		},
+		"RabbitMQVolumeSize": {
+			"Description": "Size of disk in GB to use for elasticsearch ebs volumes",
+			"Type": "Number",
+			"MinValue": 20,
+			"Default": 20
+		},
+		"Route53ZoneId": {
+			"Description": "The zone id to add dns records to on instance setup. If empty updates won't happen",
+			"Type": "String",
+			"Default": ""
+		},
+		"Route53DomainName": {
+			"Description": "The domain name to append to dns records",
+			"Type": "String",
+			"Default": ""
+		},
+		"PagerDutyAPIKey": {
+			"Description": "The pagerduty api key if you want sensu alerts forwarded to pagerduty",
+			"Type": "String",
+			"Default": ""
+		},
+		"RedisNodeType": {
+			"Default": "cache.m1.small",
+			"Description": "The compute and memory capacity of the nodes in the Redis Cluster",
+			"Type": "String",
+			"AllowedValues": [ "cache.m1.small", "cache.m1.large", "cache.m1.xlarge", "cache.m2.xlarge", "cache.m2.2xlarge", "cache.m2.4xlarge", "cache.c1.xlarge" ],
+			"ConstraintDescription": "must select a valid Cache Node type."
+		}
+	},
+  "Mappings": {
+    "AWSNATAMI": {
+      "us-east-1": {
+        "AMI": "ami-c6699baf"
+      },
+      "us-west-2": {
+        "AMI": "ami-52ff7262"
+      },
+      "us-west-1": {
+        "AMI": "ami-3bcc9e7e"
+      },
+      "eu-west-1": {
+        "AMI": "ami-0b5b6c7f"
+      },
+      "ap-southeast-1": {
+        "AMI": "ami-02eb9350"
+      },
+      "ap-northeast-1": {
+        "AMI": "ami-14d86d15"
+      },
+      "sa-east-1": {
+        "AMI": "ami-0439e619"
+      }
     },
-    "CookbooksRef": {
-      "Description": "The git reference to checkout for custom cookbooks",
-      "Type": "String",
-      "Default": "master"
-    },
-    "CookbooksSshKey": {
-      "Description": "The ssh key needed to clone the cookbooks repo",
-      "Type": "String",
-      "NoEcho": "true",
-      "Default": ""
-    },
-    "Version": {
-      "Description": "Just a place holder for version",
-      "Type": "String",
-      "Default": "0.1"
-    },
-    "RabbitMQCertificateARN": {
-      "Description": "ARN of the certificate to use for rabbitmq",
-      "Type": "String"
-    },
-    "GithubOauthAppId": {
-      "Description": "Github Oauth App Id to use for doorman authentication. Leave empty for none.",
-      "Type": "String",
-      "Default": ""
-    },
-    "GithubOauthSecret": {
-      "Description": "Github Oauth App Secret to use for doorman authentication. Leave empty for none.",
-      "Type": "String",
-      "NoEcho": "true",
-      "Default": ""
-    },
-    "GithubOauthOrganization": {
-      "Description": "Github Organization to allow through doorman",
-      "Type": "String",
-      "Default": ""
-    },
-    "DoormanEnable": {
-        "Description": "Protect all internal resources through Doorman? If you are not deploying this privately through a VPN, this is recommended",
-        "Type": "String",
-        "Default": "true",
-        "AllowedValues": ["true","false"]
-    },
-    "DoormanSessionSecret": {
-      "Description": "A Secret Salt used to encrypt cookies for doorman",
-      "Type": "String",
-      "NoEcho": "true",
-      "Default": ""
-    },
-    "DoormanPassword": {
-      "Description": "Password to use for alternate authentication through doorman. Leave empty for none",
-      "Type": "String",
-      "Default": ""
-    },
-    "OpsWorksStackColor": {
-      "Description": "RGB Color to use for OpsWorks Stack",
-      "Type": "String",
-      "Default": "rgb(45, 114, 184)"
-    },
-    "RabbitMQInstanceType":{
-        "Type" : "String",
-        "Default" : "r3.large",
-        "AllowedValues" : ["t2.micro", "t2.small", "t2.medium", "m3.medium", "m3.large", "c3.large", "r3.large"],
-        "Description" : "Type of instance"
-    },
-    "GraphiteInstanceType":{
-        "Type" : "String",
-        "Default" : "c3.large",
-        "AllowedValues" : ["t2.micro", "t2.small", "t2.medium", "m3.medium", "m3.large", "c3.large", "r3.large"],
-        "Description" : "Type of instance"
-    },
-    "ElasticSearchInstanceType":{
-        "Type" : "String",
-        "Default" : "r3.large",
-        "AllowedValues" : ["t2.micro", "t2.small", "t2.medium", "m3.medium", "m3.large", "c3.large", "r3.large"],
-        "Description" : "Type of instance"
-    },
-    "LogstashInstanceType":{
-        "Type" : "String",
-        "Default" : "c3.large",
-        "AllowedValues" : ["t2.micro", "t2.small", "t2.medium", "m3.medium", "m3.large", "c3.large", "r3.large"],
-        "Description" : "Type of instance"
-    },
-    "DashboardInstanceType":{
-        "Type" : "String",
-        "Default" : "m3.large",
-        "AllowedValues" : ["m3.medium", "m3.large", "c3.large", "r3.large", "m3.2xlarge"],
-        "Description" : "Type of instance"
-    },
-    "RabbitMQUser": {
-      "Description": "RabbitMQ User",
-      "Type": "String",
-      "Default": "logger"
-    },
-    "RabbitMQErlangCookie": {
-      "Description": "RabbitMQ Erlang Cookie. This should be unique per stack",
-      "Type": "String",
-      "NoEcho": "true"
-    },
-    "RabbitMQPassword": {
-      "Description": "RabbitMQ Password",
-      "Type": "String",
-      "Default": "hunter2"
-    },
-    "RabbitMQLogstashInternalUser": {
-      "Description": "RabbitMQ User",
-      "Type": "String",
-      "Default": "logstash_internal"
-    },
-    "RabbitMQLogstashInternalPassword": {
-      "Description": "RabbitMQ Password",
-      "Type": "String"
-    },
-    "RabbitMQLogstashExternalUser": {
-      "Description": "RabbitMQ User",
-      "Type": "String",
-      "Default": "logstash_external"
-    },
-    "RabbitMQLogstashExternalPassword": {
-      "Description": "RabbitMQ Password",
-      "Type": "String"
-    },
-    "RabbitMQSensuPassword": {
-      "Description": "RabbitMQ Sensu Password",
-      "Type": "String"
-    },
-    "RabbitMQStatsdPassword": {
-      "Description": "RabbitMQ Statsd Password",
-      "Type": "String"
-    },
-    "GraphiteVolumeSize": {
-      "Description": "Size of disk in GB to use for graphite ebs volumes",
-      "Type": "Number",
-      "MinValue": 20,
-      "Default": 100
-    },
-    "ElasticSearchVolumeSize": {
-      "Description": "Size of disk in GB to use for elasticsearch ebs volumes",
-      "Type": "Number",
-      "MinValue": 20,
-      "Default": 1000
-    },
-    "RabbitMQVolumeSize": {
-      "Description": "Size of disk in GB to use for elasticsearch ebs volumes",
-      "Type": "Number",
-      "MinValue": 20,
-      "Default": 20
-    },
-    "Route53ZoneId": {
-      "Description": "The zone id to add dns records to on instance setup. If empty updates won't happen",
-      "Type": "String",
-      "Default": ""
-    },
-    "Route53DomainName": {
-      "Description": "The domain name to append to dns records",
-      "Type": "String",
-      "Default": ""
-    },
-    "PagerDutyAPIKey": {
-      "Description": "The pagerduty api key if you want sensu alerts forwarded to pagerduty",
-      "Type": "String",
-      "Default": ""
-    },
-    "RedisNodeType" : {
-      "Default" : "cache.m1.small",
-      "Description" : "The compute and memory capacity of the nodes in the Redis Cluster",
-      "Type" : "String",
-      "AllowedValues" : [ "cache.m1.small", "cache.m1.large", "cache.m1.xlarge", "cache.m2.xlarge", "cache.m2.2xlarge", "cache.m2.4xlarge", "cache.c1.xlarge" ],
-      "ConstraintDescription" : "must select a valid Cache Node type."
+    "SubnetConfig": {
+      "VPC": {
+        "CIDR": "10.133.0.0/16"
+      },
+      "Public": {
+        "CIDR": "10.133.0.0/24"
+      },
+      "Private0": {
+        "CIDR": "10.133.1.0/24"
+      },
+      "Private1": {
+        "CIDR": "10.133.2.0/24"
+      },
+      "Private2": {
+        "CIDR": "10.133.3.0/24"
+      },
+      "Private3": {
+        "CIDR": "10.133.4.0/24"
+      }
     }
   },
   "Resources": {
@@ -284,10 +283,10 @@
           ]
         },
         "VpcId": {
-          "Ref": "VpcIdentifier"
+          "Ref": "VPC"
         },
         "DefaultSubnetId": {
-          "Ref": "PrivateSubnet"
+          "Ref": "PrivateSubnet0"
         },
         "CustomJson": {
           "chef_environment": "production",
@@ -430,8 +429,8 @@
             }
           },
           "doorman": {
-            "enable": {
-              "Ref": "DoormanEnable"
+            "password": {
+              "Ref": "DoormanPassword"
             },
             "session_secret":
             {
@@ -469,14 +468,84 @@
         }
       }
     },
+    "OpsWorksBastionLayer": {
+      "Type": "AWS::OpsWorks::Layer",
+      "Metadata": {
+        "Comment": "Put the bastion layer inside of opsworks so the same users that have access to opsworks will have access to bastion."
+      },
+      "DependsOn": [
+        "NATIPAddress",
+        "PublicRoute",
+        "PublicSubnetRouteTableAssociation",
+        "PrivateRoute",
+        "PrivateSubnet0RouteTableAssociation",
+        "PrivateSubnet1RouteTableAssociation",
+        "PrivateSubnet2RouteTableAssociation",
+        "PrivateSubnet3RouteTableAssociation"
+      ],
+      "Properties": {
+        "StackId": {
+          "Ref": "OpsWorksStack"
+        },
+        "Name": "Bastion",
+        "Type": "custom",
+        "Shortname": "bastion",
+        "EnableAutoHealing": "true",
+        "AutoAssignElasticIps": "true",
+        "AutoAssignPublicIps": "false",
+        "CustomSecurityGroupIds": [
+          {
+            "Ref": "OpsWorksSecurityGroup"
+          },
+          {
+            "Ref": "InternalSecurityGroup"
+          }
+        ],
+        "CustomRecipes": {
+          "Setup": [
+            "bb_monitor::route53",
+            "bb_monitor::logstash_agent"
+          ],
+          "Configure": [
+            "bb_monitor::sensu_client"
+          ],
+          "Deploy": [],
+          "Undeploy": [],
+          "Shutdown": []
+        }
+      }
+    },
+    "BastionInstance1": {
+      "Type": "AWS::OpsWorks::Instance",
+      "Properties": {
+        "StackId": {
+          "Ref": "OpsWorksStack"
+        },
+        "LayerIds": [
+          {
+            "Ref": "OpsWorksBastionLayer"
+          }
+        ],
+        "InstanceType": { "Ref":"BastionInstanceType"} ,
+        "SubnetId": {
+          "Ref": "PublicSubnet"
+        }
+      }
+    },
     "OpsWorksDashboardLayer": {
       "Type": "AWS::OpsWorks::Layer",
       "Metadata": {
         "Comment": ""
       },
       "DependsOn": [
+        "NATIPAddress",
+        "PublicRoute",
         "PublicSubnetRouteTableAssociation",
-        "PrivateSubnetRouteTableAssociation",
+        "PrivateRoute",
+        "PrivateSubnet0RouteTableAssociation",
+        "PrivateSubnet1RouteTableAssociation",
+        "PrivateSubnet2RouteTableAssociation",
+        "PrivateSubnet3RouteTableAssociation",
         "RedisCluster"
       ],
       "Properties": {
@@ -495,13 +564,7 @@
           },
           {
             "Ref": "InternalSecurityGroup"
-          },
-          {
-            "Ref": "VpcSecurityGroupEmployeeAccess"
-          },
-		  {
-			"Ref": "VpcSecurityGroupBastionAccess"
-		  }
+          }
         ],
         "CustomRecipes": {
           "Setup": [
@@ -538,7 +601,6 @@
           }
         ],
         "InstanceType": { "Ref" : "DashboardInstanceType" },
-        "RootDeviceType" : "ebs",
 		"SshKeyName" : { "Ref" : "InstanceKeyName" }
       }
     },
@@ -548,8 +610,14 @@
         "Comment": ""
       },
       "DependsOn": [
+        "NATIPAddress",
+        "PublicRoute",
         "PublicSubnetRouteTableAssociation",
-        "PrivateSubnetRouteTableAssociation"
+        "PrivateRoute",
+        "PrivateSubnet0RouteTableAssociation",
+        "PrivateSubnet1RouteTableAssociation",
+        "PrivateSubnet2RouteTableAssociation",
+        "PrivateSubnet3RouteTableAssociation"
       ],
       "Properties": {
         "StackId": {
@@ -567,13 +635,7 @@
           },
           {
             "Ref": "InternalSecurityGroup"
-          },
-          {
-            "Ref": "VpcSecurityGroupEmployeeAccess"
-          },
-		  {
-			"Ref": "VpcSecurityGroupBastionAccess"
-		  }
+          }
         ],
         "CustomRecipes": {
           "Setup": [
@@ -613,7 +675,6 @@
           }
         ],
         "InstanceType": { "Ref" : "GraphiteInstanceType" },
-        "RootDeviceType" : "ebs",
 		"SshKeyName" : { "Ref" : "InstanceKeyName" }
       }
     },
@@ -623,8 +684,14 @@
         "Comment": ""
       },
       "DependsOn": [
+        "NATIPAddress",
+        "PublicRoute",
         "PublicSubnetRouteTableAssociation",
-        "PrivateSubnetRouteTableAssociation"
+        "PrivateRoute",
+        "PrivateSubnet0RouteTableAssociation",
+        "PrivateSubnet1RouteTableAssociation",
+        "PrivateSubnet2RouteTableAssociation",
+        "PrivateSubnet3RouteTableAssociation"
       ],
       "Properties": {
         "StackId": {
@@ -642,13 +709,7 @@
           },
           {
             "Ref": "InternalSecurityGroup"
-          },
-          {
-            "Ref": "VpcSecurityGroupEmployeeAccess"
-          },
-		  {
-			"Ref": "VpcSecurityGroupBastionAccess"
-		  }
+          }
         ],
         "CustomRecipes": {
           "Setup": [
@@ -688,7 +749,7 @@
           }
         ],
         "InstanceType": { "Ref" : "ElasticSearchInstanceType" },
-        "RootDeviceType" : "ebs",
+        "SubnetId": { "Ref" : "PrivateSubnet0" },
 		"SshKeyName" : { "Ref" : "InstanceKeyName" }
       }
     },
@@ -707,7 +768,26 @@
           }
         ],
         "InstanceType": { "Ref" : "ElasticSearchInstanceType" },
-        "RootDeviceType" : "ebs",
+        "SubnetId": { "Ref" : "PrivateSubnet1" },
+		"SshKeyName" : { "Ref" : "InstanceKeyName" }
+      }
+    },
+    "ElasticSearchInstance3": {
+      "Type": "AWS::OpsWorks::Instance",
+      "DependsOn": [
+        "ElasticSearchInstance2"
+      ],
+      "Properties": {
+        "StackId": {
+          "Ref": "OpsWorksStack"
+        },
+        "LayerIds": [
+          {
+            "Ref": "OpsWorksElasticSearchLayer"
+          }
+        ],
+        "InstanceType": { "Ref" : "ElasticSearchInstanceType" },
+        "SubnetId": { "Ref" : "PrivateSubnet2" },
 		"SshKeyName" : { "Ref" : "InstanceKeyName" }
       }
     },
@@ -717,8 +797,14 @@
         "Comment": ""
       },
       "DependsOn": [
+        "NATIPAddress",
+        "PublicRoute",
         "PublicSubnetRouteTableAssociation",
-        "PrivateSubnetRouteTableAssociation"
+        "PrivateRoute",
+        "PrivateSubnet0RouteTableAssociation",
+        "PrivateSubnet1RouteTableAssociation",
+        "PrivateSubnet2RouteTableAssociation",
+        "PrivateSubnet3RouteTableAssociation"
       ],
       "Properties": {
         "StackId": {
@@ -736,13 +822,7 @@
           },
           {
             "Ref": "InternalSecurityGroup"
-          },
-          {
-            "Ref": "VpcSecurityGroupEmployeeAccess"
-          },
-		  {
-			"Ref": "VpcSecurityGroupBastionAccess"
-		  }
+          }
         ],
         "CustomRecipes": {
           "Setup": [
@@ -782,7 +862,6 @@
           }
         ],
         "InstanceType": { "Ref" : "RabbitMQInstanceType" },
-        "RootDeviceType" : "ebs",
 		"SshKeyName" : { "Ref" : "InstanceKeyName" }
       }
     },
@@ -792,8 +871,14 @@
         "Comment": ""
       },
       "DependsOn": [
+        "NATIPAddress",
+        "PublicRoute",
         "PublicSubnetRouteTableAssociation",
-        "PrivateSubnetRouteTableAssociation"
+        "PrivateRoute",
+        "PrivateSubnet0RouteTableAssociation",
+        "PrivateSubnet1RouteTableAssociation",
+        "PrivateSubnet2RouteTableAssociation",
+        "PrivateSubnet3RouteTableAssociation"
       ],
       "Properties": {
         "StackId": {
@@ -811,10 +896,7 @@
           },
           {
             "Ref": "InternalSecurityGroup"
-          },
-		  {
-			"Ref": "VpcSecurityGroupBastionAccess"
-		  }
+          }
         ],
         "CustomRecipes": {
           "Setup": [
@@ -837,6 +919,7 @@
       "DependsOn": [
         "ElasticSearchInstance1",
         "ElasticSearchInstance2",
+        "ElasticSearchInstance3",
         "DashboardInstance1",
         "RabbitMQInstance1"
       ],
@@ -850,7 +933,6 @@
           }
         ],
         "InstanceType": { "Ref" : "LogstashInstanceType" },
-        "RootDeviceType" : "ebs",
 		"SshKeyName" : { "Ref" : "InstanceKeyName" }
       }
     },
@@ -1051,7 +1133,7 @@
       "Properties": {
         "GroupDescription": "Allow inbound requests from the ELB to the OpsWorks instances",
         "VpcId": {
-          "Ref": "VpcIdentifier"
+          "Ref": "VPC"
         },
         "SecurityGroupIngress": [
           {
@@ -1118,12 +1200,12 @@
         }
       }
     },
-	"DashboardELBSecurityGroup": {
+    "DashboardELBSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
       "Properties": {
         "GroupDescription": "Allow inbound access to the ELB",
         "VpcId": {
-          "Ref": "VpcIdentifier"
+          "Ref": "VPC"
         },
         "SecurityGroupIngress": [
           {
@@ -1152,10 +1234,7 @@
           },
           {
             "Ref": "InternalSecurityGroup"
-          },
-		  {
-			"Ref": "VpcSecurityGroupEmployeeAccess"
-		  }
+          }
         ],
         "Subnets": [
           {
@@ -1175,7 +1254,7 @@
           },
           {
             "LoadBalancerPort": "5671",
-            "InstancePort": "5672",
+            "InstancePort": "5671",
             "Protocol": "SSL",
             "SSLCertificateId": {
               "Ref": "RabbitMQCertificateARN"
@@ -1207,7 +1286,7 @@
       "Properties": {
         "GroupDescription": "Allow inbound access to the ELB",
         "VpcId": {
-          "Ref": "VpcIdentifier"
+          "Ref": "VPC"
         },
         "SecurityGroupIngress": [
           {
@@ -1248,9 +1327,7 @@
           }
         ],
         "Subnets": [
-          {
-            "Ref": "PrivateSubnet"
-          }
+          { "Ref": "PrivateSubnet0" }, { "Ref": "PrivateSubnet1" }, { "Ref": "PrivateSubnet2" }, { "Ref": "PrivateSubnet3" }
         ],
         "Scheme": "internal",
         "Listeners": [
@@ -1294,9 +1371,7 @@
           }
         ],
         "Subnets": [
-          {
-            "Ref": "PrivateSubnet"
-          }
+          { "Ref": "PrivateSubnet0" }, { "Ref": "PrivateSubnet1" }, { "Ref": "PrivateSubnet2" }, { "Ref": "PrivateSubnet3" }
         ],
         "Scheme": "internal",
         "Listeners": [
@@ -1336,20 +1411,20 @@
       "Properties": {
         "GroupDescription": "Allow VPC access to ports running on dashboard server",
         "VpcId": {
-          "Ref": "VpcIdentifier"
+          "Ref": "VPC"
         },
         "SecurityGroupIngress": [
           {
             "IpProtocol": "tcp",
             "FromPort": "0",
             "ToPort": "65535",
-            "CidrIp": { "Fn::Join" : [ "", [ "10.", { "Ref" : "CidrOctet2"}, ".0.0/16"  ]] }
-          },
-          {
-            "IpProtocol": "icmp",
-            "FromPort": "-1",
-            "ToPort": "-1",
-            "CidrIp": { "Fn::Join" : [ "", [ "10.", { "Ref" : "CidrOctet2"}, ".0.0/16"  ]] }
+            "CidrIp": {
+              "Fn::FindInMap": [
+                "SubnetConfig",
+                "VPC",
+                "CIDR"
+              ]
+            }
           },
           {
             "IpProtocol": "tcp",
@@ -1358,6 +1433,22 @@
             "SourceSecurityGroupId": {
               "Ref": "DashboardELBSecurityGroup"
             }
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "0",
+            "ToPort": "65535",
+            "CidrIp": {
+              "Fn::Join": [
+                "",
+                [
+                  {
+                    "Ref": "NATIPAddress"
+                  },
+                  "/32"
+                ]
+              ]
+            }
           }
         ],
         "SecurityGroupEgress": [
@@ -1365,12 +1456,6 @@
             "IpProtocol": "tcp",
             "FromPort": "0",
             "ToPort": "65535",
-            "CidrIp": "0.0.0.0/0"
-          },
-		  {
-            "IpProtocol": "icmp",
-            "FromPort": "-1",
-            "ToPort": "-1",
             "CidrIp": "0.0.0.0/0"
           }
         ]
@@ -1390,14 +1475,14 @@
       "Type": "AWS::ElastiCache::SubnetGroup",
       "Properties": {
         "Description": "Subnet Group for redis",
-        "SubnetIds": [ {"Ref": "PrivateSubnet" } ]
+        "SubnetIds": [ { "Ref": "PrivateSubnet0" }, { "Ref": "PrivateSubnet1" }, { "Ref": "PrivateSubnet2" }, { "Ref": "PrivateSubnet3" } ]
       }
     },
     "RedisSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
       "Properties": {
         "GroupDescription"  : "Lock redis down to Web Server access only",
-        "VpcId": { "Ref": "VpcIdentifier" }
+        "VpcId": { "Ref": "VPC" }
       }
     },
 
@@ -1421,11 +1506,36 @@
         "SourceSecurityGroupId": { "Fn::GetAtt": ["OpsWorksSecurityGroup", "GroupId"] }
       }
     },
+    "VPC": {
+      "Type": "AWS::EC2::VPC",
+      "DependsOn": "OpsWorksServiceRole",
+      "Properties": {
+        "CidrBlock": {
+          "Fn::FindInMap": [
+            "SubnetConfig",
+            "VPC",
+            "CIDR"
+          ]
+        },
+        "Tags": [
+          {
+            "Key": "Application",
+            "Value": {
+              "Ref": "AWS::StackName"
+            }
+          },
+          {
+            "Key": "Name",
+            "Value": "opsviz"
+          }
+        ]
+      }
+    },
     "PublicSubnet": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {
         "VpcId": {
-          "Ref": "VpcIdentifier"
+          "Ref": "VPC"
         },
         "AvailabilityZone": {
           "Fn::Select": [
@@ -1437,33 +1547,12 @@
             }
           ]
         },
-        "CidrBlock": { "Fn::Join" : [ "", [ "10.", { "Ref" : "CidrOctet2"}, ".", { "Ref" : "CidrOctet3"},".0/26"  ]] },
-        "Tags": [
-          {
-            "Key": "Application",
-            "Value": {
-              "Ref": "AWS::StackName"
-            }
-          },
-          {
-            "Key": "Network",
-            "Value": { "Fn::Join" : [ "", [ { "Ref" : "AWS::StackName"}, "-Public1"  ]] }
-          }
-        ]
-      }
-    },
-    "PublicSubnetRouteTableAssociation": {
-      "Type" : "AWS::EC2::SubnetRouteTableAssociation",
-      "Properties" : {
-        "SubnetId" : { "Ref" : "PublicSubnet" },
-        "RouteTableId" : { "Ref" : "VpcRouteTableIdPublic" }
-      }
-    },
-    "PublicNetworkAcl": {
-      "Type": "AWS::EC2::NetworkAcl",
-      "Properties": {
-        "VpcId": {
-          "Ref": "VpcIdentifier"
+        "CidrBlock": {
+          "Fn::FindInMap": [
+            "SubnetConfig",
+            "Public",
+            "CIDR"
+          ]
         },
         "Tags": [
           {
@@ -1475,10 +1564,98 @@
           {
             "Key": "Network",
             "Value": "Public"
+          }
+        ]
+      }
+    },
+    "InternetGateway": {
+      "Type": "AWS::EC2::InternetGateway",
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "Application",
+            "Value": {
+              "Ref": "AWS::StackName"
+            }
           },
           {
-            "Key": "Name",
-            "Value": { "Fn::Join" : [ "", [ { "Ref" : "AWS::StackName"}, "-ACL-Public"  ]] }
+            "Key": "Network",
+            "Value": "Public"
+          }
+        ]
+      }
+    },
+    "VPCGatewayAttachment": {
+      "Type": "AWS::EC2::VPCGatewayAttachment",
+      "Properties": {
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "InternetGatewayId": {
+          "Ref": "InternetGateway"
+        }
+      }
+    },
+    "PublicRouteTable": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "Tags": [
+          {
+            "Key": "Application",
+            "Value": {
+              "Ref": "AWS::StackName"
+            }
+          },
+          {
+            "Key": "Network",
+            "Value": "Public"
+          }
+        ]
+      }
+    },
+    "PublicRoute": {
+      "Type": "AWS::EC2::Route",
+      "DependsOn": "VPCGatewayAttachment",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "PublicRouteTable"
+        },
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": {
+          "Ref": "InternetGateway"
+        }
+      }
+    },
+    "PublicSubnetRouteTableAssociation": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "SubnetId": {
+          "Ref": "PublicSubnet"
+        },
+        "RouteTableId": {
+          "Ref": "PublicRouteTable"
+        }
+      }
+    },
+    "PublicNetworkAcl": {
+      "Type": "AWS::EC2::NetworkAcl",
+      "Properties": {
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "Tags": [
+          {
+            "Key": "Application",
+            "Value": {
+              "Ref": "AWS::StackName"
+            }
+          },
+          {
+            "Key": "Network",
+            "Value": "Public"
           }
         ]
       }
@@ -1579,11 +1756,11 @@
         }
       }
     },
-    "PrivateSubnet": {
+    "PrivateSubnet0": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {
         "VpcId": {
-          "Ref": "VpcIdentifier"
+          "Ref": "VPC"
         },
         "AvailabilityZone": {
           "Fn::Select": [
@@ -1595,7 +1772,13 @@
             }
           ]
         },
-        "CidrBlock": { "Fn::Join" : [ "", [ "10.", { "Ref" : "CidrOctet2"}, ".", { "Ref" : "CidrOctet3"},".128/26"  ]] },
+        "CidrBlock": {
+          "Fn::FindInMap": [
+            "SubnetConfig",
+            "Private0",
+            "CIDR"
+          ]
+        },
         "Tags": [
           {
             "Key": "Application",
@@ -1605,23 +1788,127 @@
           },
           {
             "Key": "Name",
-            "Value": { "Fn::Join" : [ "", [ { "Ref" : "AWS::StackName"}, "-Private1"  ]] }
+            "Value": "opsviz-Private0"
           }
         ]
       }
     },
-    "PrivateSubnetRouteTableAssociation": {
-      "Type" : "AWS::EC2::SubnetRouteTableAssociation",
-      "Properties" : {
-        "SubnetId" : { "Ref" : "PrivateSubnet" },
-        "RouteTableId" : { "Ref" : "VpcRouteTableIdPrivate" }
-      }
-    },
-    "PrivateNetworkAcl": {
-      "Type": "AWS::EC2::NetworkAcl",
+    "PrivateSubnet1": {
+      "Type": "AWS::EC2::Subnet",
       "Properties": {
         "VpcId": {
-          "Ref": "VpcIdentifier"
+          "Ref": "VPC"
+        },
+        "AvailabilityZone": {
+          "Fn::Select": [
+            "1",
+            {
+              "Fn::GetAZs": {
+                "Ref": "AWS::Region"
+              }
+            }
+          ]
+        },
+        "CidrBlock": {
+          "Fn::FindInMap": [
+            "SubnetConfig",
+            "Private1",
+            "CIDR"
+          ]
+        },
+        "Tags": [
+          {
+            "Key": "Application",
+            "Value": {
+              "Ref": "AWS::StackName"
+            }
+          },
+          {
+            "Key": "Name",
+            "Value": "opsviz-Private1"
+          }
+        ]
+      }
+    },
+    "PrivateSubnet2": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "AvailabilityZone": {
+          "Fn::Select": [
+            "2",
+            {
+              "Fn::GetAZs": {
+                "Ref": "AWS::Region"
+              }
+            }
+          ]
+        },
+        "CidrBlock": {
+          "Fn::FindInMap": [
+            "SubnetConfig",
+            "Private2",
+            "CIDR"
+          ]
+        },
+        "Tags": [
+          {
+            "Key": "Application",
+            "Value": {
+              "Ref": "AWS::StackName"
+            }
+          },
+          {
+            "Key": "Name",
+            "Value": "opsviz-Private2"
+          }
+        ]
+      }
+    },
+    "PrivateSubnet3": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "AvailabilityZone": {
+          "Fn::Select": [
+            "3",
+            {
+              "Fn::GetAZs": {
+                "Ref": "AWS::Region"
+              }
+            }
+          ]
+        },
+        "CidrBlock": {
+          "Fn::FindInMap": [
+            "SubnetConfig",
+            "Private3",
+            "CIDR"
+          ]
+        },
+        "Tags": [
+          {
+            "Key": "Application",
+            "Value": {
+              "Ref": "AWS::StackName"
+            }
+          },
+          {
+            "Key": "Name",
+            "Value": "opsviz-Private3"
+          }
+        ]
+      }
+    },
+    "PrivateRouteTable": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "VPC"
         },
         "Tags": [
           {
@@ -1633,10 +1920,82 @@
           {
             "Key": "Network",
             "Value": "Private"
+          }
+        ]
+      }
+    },
+    "PrivateSubnet0RouteTableAssociation": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "SubnetId": {
+          "Ref": "PrivateSubnet0"
+        },
+        "RouteTableId": {
+          "Ref": "PrivateRouteTable"
+        }
+      }
+    },
+    "PrivateSubnet1RouteTableAssociation": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "SubnetId": {
+          "Ref": "PrivateSubnet1"
+        },
+        "RouteTableId": {
+          "Ref": "PrivateRouteTable"
+        }
+      }
+    },
+    "PrivateSubnet2RouteTableAssociation": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "SubnetId": {
+          "Ref": "PrivateSubnet2"
+        },
+        "RouteTableId": {
+          "Ref": "PrivateRouteTable"
+        }
+      }
+    },
+    "PrivateSubnet3RouteTableAssociation": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "SubnetId": {
+          "Ref": "PrivateSubnet3"
+        },
+        "RouteTableId": {
+          "Ref": "PrivateRouteTable"
+        }
+      }
+    },
+    "PrivateRoute": {
+      "Type": "AWS::EC2::Route",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "PrivateRouteTable"
+        },
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "InstanceId": {
+          "Ref": "NATDevice"
+        }
+      }
+    },
+    "PrivateNetworkAcl": {
+      "Type": "AWS::EC2::NetworkAcl",
+      "Properties": {
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "Tags": [
+          {
+            "Key": "Application",
+            "Value": {
+              "Ref": "AWS::StackName"
+            }
           },
           {
-            "Key": "Name",
-            "Value": { "Fn::Join" : [ "", [ { "Ref" : "AWS::StackName"}, "-ACL-Private"  ]] }
+            "Key": "Network",
+            "Value": "Private"
           }
         ]
       }
@@ -1675,15 +2034,136 @@
         }
       }
     },
-    "PrivateSubnetNetworkAclAssociation": {
+    "PrivateSubnet0NetworkAclAssociation": {
       "Type": "AWS::EC2::SubnetNetworkAclAssociation",
       "Properties": {
         "SubnetId": {
-          "Ref": "PrivateSubnet"
+          "Ref": "PrivateSubnet0"
         },
         "NetworkAclId": {
           "Ref": "PrivateNetworkAcl"
         }
+      }
+    },
+    "PrivateSubnet1NetworkAclAssociation": {
+      "Type": "AWS::EC2::SubnetNetworkAclAssociation",
+      "Properties": {
+        "SubnetId": {
+          "Ref": "PrivateSubnet1"
+        },
+        "NetworkAclId": {
+          "Ref": "PrivateNetworkAcl"
+        }
+      }
+    },
+    "PrivateSubnet2NetworkAclAssociation": {
+      "Type": "AWS::EC2::SubnetNetworkAclAssociation",
+      "Properties": {
+        "SubnetId": {
+          "Ref": "PrivateSubnet2"
+        },
+        "NetworkAclId": {
+          "Ref": "PrivateNetworkAcl"
+        }
+      }
+    },
+    "PrivateSubnet3NetworkAclAssociation": {
+      "Type": "AWS::EC2::SubnetNetworkAclAssociation",
+      "Properties": {
+        "SubnetId": {
+          "Ref": "PrivateSubnet3"
+        },
+        "NetworkAclId": {
+          "Ref": "PrivateNetworkAcl"
+        }
+      }
+    },
+    "NATIPAddress": {
+      "Type": "AWS::EC2::EIP",
+      "Properties": {
+        "Domain": "vpc",
+        "InstanceId": {
+          "Ref": "NATDevice"
+        }
+      }
+    },
+    "NATDevice": {
+      "Type": "AWS::EC2::Instance",
+      "Properties": {
+        "InstanceType": "m1.small",
+        "SubnetId": {
+          "Ref": "PublicSubnet"
+        },
+        "SourceDestCheck": "false",
+        "ImageId": {
+          "Fn::FindInMap": [
+            "AWSNATAMI",
+            {
+              "Ref": "AWS::Region"
+            },
+            "AMI"
+          ]
+        },
+        "SecurityGroupIds": [
+          {
+            "Ref": "NATSecurityGroup"
+          }
+        ]
+      }
+    },
+    "NATSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Allow OpsWorks instances to access the NAT Device",
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "SecurityGroupIngress": [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "80",
+            "ToPort": "80",
+            "SourceSecurityGroupId": {
+              "Ref": "OpsWorksSecurityGroup"
+            }
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "9418",
+            "ToPort": "9418",
+            "SourceSecurityGroupId": {
+              "Ref": "OpsWorksSecurityGroup"
+            }
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "443",
+            "ToPort": "443",
+            "SourceSecurityGroupId": {
+              "Ref": "OpsWorksSecurityGroup"
+            }
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "0",
+            "ToPort": "65535",
+            "CidrIp": {
+              "Fn::FindInMap": [
+                "SubnetConfig",
+                "VPC",
+                "CIDR"
+              ]
+            }
+          }
+        ],
+        "SecurityGroupEgress": [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "0",
+            "ToPort": "65535",
+            "CidrIp": "0.0.0.0/0"
+          }
+        ]
       }
     }
   },
@@ -1696,7 +2176,7 @@
     "VPC": {
       "Description": "VPC",
       "Value": {
-        "Ref": "VpcIdentifier"
+        "Ref": "VPC"
       }
     },
     "PublicSubnet": {
@@ -1704,9 +2184,24 @@
         "Ref": "PublicSubnet"
       }
     },
-    "PrivateSubnet": {
+    "PrivateSubnet0": {
       "Value": {
-        "Ref": "PrivateSubnet"
+        "Ref": "PrivateSubnet0"
+      }
+    },
+    "PrivateSubnet1": {
+      "Value": {
+        "Ref": "PrivateSubnet1"
+      }
+    },
+    "PrivateSubnet2": {
+      "Value": {
+        "Ref": "PrivateSubnet2"
+      }
+    },
+    "PrivateSubnet3": {
+      "Value": {
+        "Ref": "PrivateSubnet3"
       }
     },
     "DashboardUrl": {

@@ -17,7 +17,6 @@ end
 
 package 'flapjack' do
  action :install
- options "--force-yes"
 end
 
 template '/etc/flapjack/flapjack_config.yaml' do
