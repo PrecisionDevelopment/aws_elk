@@ -327,7 +327,10 @@
 							}
 						},
 						"discovery": {
-							"type": "ec2"
+							"type": "ec2",
+							"ec2": {
+								"groups": { "Ref": "ElasticSearchSecurityGroup" }
+							}
 						},
 						"http_auth": false,
 						"index.number_of_shards": 8,
@@ -707,6 +710,9 @@
 					},
 					{
 						"Ref": "InternalSecurityGroup"
+					},
+					{
+						"Ref": "ElasticSearchSecurityGroup"
 					}
 				],
 				"CustomRecipes": {
@@ -748,6 +754,45 @@
 				],
 				"InstanceType": { "Ref": "ElasticSearchInstanceType" },
 				"SubnetId": { "Ref": "PrivateSubnet0" },
+				"SshKeyName": { "Ref": "InstanceKeyName" }
+			}
+		},
+		"ElasticSearchInstance2": {
+			"Type": "AWS::OpsWorks::Instance",
+			"DependsOn": [
+				"ElasticSearchInstance1"
+			],
+			"Properties": {
+				"StackId": {
+					"Ref": "OpsWorksStack"
+				},
+				"LayerIds": [
+					{
+						"Ref": "OpsWorksElasticSearchLayer"
+					}
+				],
+				"InstanceType": { "Ref": "ElasticSearchInstanceType" },
+				"SubnetId": { "Ref": "PrivateSubnet1" },
+				"SshKeyName": { "Ref": "InstanceKeyName" }
+			}
+		},
+		"ElasticSearchInstance3": {
+			"Type": "AWS::OpsWorks::Instance",
+			"DependsOn": [
+				"ElasticSearchInstance1",
+				"ElasticSearchInstance2" 
+			],
+			"Properties": {
+				"StackId": {
+					"Ref": "OpsWorksStack"
+				},
+				"LayerIds": [
+					{
+						"Ref": "OpsWorksElasticSearchLayer"
+					}
+				],
+				"InstanceType": { "Ref": "ElasticSearchInstanceType" },
+				"SubnetId": { "Ref": "PrivateSubnet2" },
 				"SshKeyName": { "Ref": "InstanceKeyName" }
 			}
 		},
@@ -878,6 +923,8 @@
 			"Type": "AWS::OpsWorks::Instance",
 			"DependsOn": [
 				"ElasticSearchInstance1",
+				"ElasticSearchInstance2",
+				"ElasticSearchInstance3",
 				"DashboardInstance1",
 				"RabbitMQInstance1"
 			],
@@ -1104,6 +1151,26 @@
 					}
 				]
 			}
+		},
+		"ElasticSearchSecurityGroup": {
+			"Type": "AWS::EC2::SecurityGroup",
+			"Properties": {
+				"GroupDescription": "Allows ElasticSearch nodes to identify each other and communicate",
+				"VpcId": {
+					"Ref": "VPC"
+				}
+			}
+		},
+		"ElasticSearchSecurityGroupSelfIngress": {
+			"Type": "AWS::EC2::SecurityGroupIngress",
+			"Properties": {
+				"GroupId": { "Ref": "ElasticSearchSecurityGroup" },
+				"IpProtocol": "tcp",
+				"ToPort": "9300",
+				"FromPort": "9300",
+				"SourceSecurityGroupId": { "Ref": "ElasticSearchSecurityGroup" }
+			},
+			"DependsOn": "ElasticSearchSecurityGroup"
 		},
 		"DashboardELB": {
 			"Type": "AWS::ElasticLoadBalancing::LoadBalancer",
@@ -1448,6 +1515,17 @@
 					}
 				]
 			}
+		},
+		"InternalAccessSecurityGroupSelfIngress": {
+			"Type": "AWS::EC2::SecurityGroupIngress",
+			"Properties": {
+				"GroupId": { "Ref": "InternalSecurityGroup" },
+				"IpProtocol": "-1",
+				"ToPort": "-1",
+				"FromPort": "-1",
+				"SourceSecurityGroupId": { "Ref": "InternalSecurityGroup" }
+			},
+			"DependsOn": "InternalSecurityGroup"
 		},
 		"RedisCluster": {
 			"Type": "AWS::ElastiCache::CacheCluster",
