@@ -4,11 +4,6 @@ listen <% if node[:doorman][:enabled]=='true' -%>8080<% else -%>80<% end -%>;
   port_in_redirect off;
 
   location / {
-    alias /opt/kibana/current;
-    proxy_set_header Host $host:80;
-  }
-
-  location /graphite {
     proxy_pass            http://<%= node['graphite']['host'] %>:<%= node['graphite']['uwsgi']['port'] %>/;
   }
 
@@ -16,6 +11,11 @@ listen <% if node[:doorman][:enabled]=='true' -%>8080<% else -%>80<% end -%>;
     proxy_pass            http://127.0.0.1:3080/;
     proxy_set_header Host $host:80;
     rewrite /flapjack/(.*) /$1 break;
+  }
+
+  location /kibana {
+    alias /opt/kibana/current;
+    proxy_set_header Host $host:80;
   }
 
   location /elasticsearch {
