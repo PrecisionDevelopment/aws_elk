@@ -33,9 +33,7 @@ normal[:logstash][:server][:filters][:grok][:match] = [
 
 normal[:logstash][:server][:filters][:grok] = [
   {
-      "remove_field" => {
-        "message"
-      }
+      "remove_field" => "message"
   }
 ]
 
