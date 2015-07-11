@@ -29,9 +29,7 @@ normal[:logstash][:server][:filters] = [
   {
     "grok"=> {
       "match" => [
-        {
-          "message" => "\[%{GREEDYDATA:project}\] %{TIMESTAMP_ISO8601:utcdate} %{LOGLEVEL:loglevel} %{NOTSPACE:classname} :: %{GREEDYDATA:messagetext} ## %{GREEDYDATA:exception}"
-        }
+        "message" => { "\[%{GREEDYDATA:project}\] %{TIMESTAMP_ISO8601:utcdate} %{LOGLEVEL:loglevel} %{NOTSPACE:classname} :: %{GREEDYDATA:messagetext} ## %{GREEDYDATA:exception}" }
       ],
       "remove_field" => [
         "message"
